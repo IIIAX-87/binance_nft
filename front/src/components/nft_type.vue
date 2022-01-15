@@ -38,8 +38,8 @@
       <b-form-group
       v-if="product"
       label="Транзакции:">
-        <scatter-chart v-if="TRANSACTIONS" class="small" :chart-data="TRANSACTIONS" :options="options"></scatter-chart>
-        <b-table striped hover :items="TRANSACTIONS.alldata[0]"></b-table>
+        <scatter-chart v-if="TRANSACTIONS" class="small" :chart-data="this.TRANSACTIONS" :options="options"></scatter-chart>
+        <b-table striped hover :items="this.TRANSACTIONS.alldata[0]"></b-table>
       </b-form-group>
     </b-form>
   </div>
