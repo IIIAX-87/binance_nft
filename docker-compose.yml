@@ -16,17 +16,17 @@ services:
 ##    depends_on:
 ##      db:
 ##        condition: service_healthy
-  bot:
-    build: .
-    command: python manage.py get_buy
-    volumes:
-      - ./static/:/usr/src/static
-    restart: on-failure
-##    depends_on:
-##      db:
-##        condition: service_healthy
-    env_file:
-      - .env
+#  bot:
+#    build: .
+#    command: python manage.py get_buy
+#    volumes:
+#      - ./static/:/usr/src/static
+#    restart: on-failure
+###    depends_on:
+###      db:
+###        condition: service_healthy
+#    env_file:
+#      - .env
 
 
 #  aiogram:
