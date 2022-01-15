@@ -1,0 +1,99 @@
+version: '3'
+
+services:
+  binance_nft:
+    build: .
+    command: gunicorn binance_nft.wsgi:application --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE=binance_nft.settings
+    volumes:
+      - ./static:/usr/src/static
+      - ./media:/usr/src/media
+    ports:
+      - "8000:8000"
+
+    env_file:
+      - .env
+    restart: on-failure
+##    depends_on:
+##      db:
+##        condition: service_healthy
+  bot:
+    build: .
+    command: python manage.py get_buy
+    volumes:
+      - ./static/:/usr/src/static
+    restart: on-failure
+##    depends_on:
+##      db:
+##        condition: service_healthy
+    env_file:
+      - .env
+
+
+#  aiogram:
+#    build: .
+#    command: python manage.py bot --settings=UFC.settings.docker
+#    volumes:
+#      - ./ufc-bot:/usr/src/ufc-bot
+#      - ./static:/usr/src/static
+#      - ./media:/usr/src/media
+#    restart: on-failure
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#    env_file:
+#      - .env
+#  firefox:
+#    image: selenium/standalone-firefox
+#    volumes:
+#      - /dev/shm:/dev/shm
+#    ports:
+#    - "4444:4444"
+#    - "5900:5900"
+#    environment:
+#      - SCREEN_WIDTH=1920
+#      - SCREEN_HEIGHT=1080
+  db:
+    image: postgres:12.0
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data/
+#    expose:
+#      - 5432
+    ports:
+    - "5432:5432"
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      timeout: 5s
+      retries: 5
+  site:
+    build: ./front/
+    ports:
+    - 1488:1488
+    restart: unless-stopped
+    volumes:
+      #- ./svertuhi/dist:/var/www/html
+      - ./nginx-conf:/etc/nginx/conf.d
+      - ./static:/var/www/static
+  redis:
+    image: library/redis:stretch
+    env_file:
+      - .env
+  celery:
+    build: .
+    command: celery -A binance_nft worker -l info
+    volumes:
+      - .:/usr/src/app/
+    depends_on:
+      - redis
+    env_file:
+      - .env
+  celery-beat:
+    build: .
+    command: celery -A binance_nft beat -l info
+    volumes:
+      - .:/usr/src/app/
+    depends_on:
+      - redis
+    env_file:
+      - .env
