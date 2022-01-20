@@ -1,4 +1,3 @@
-<script src="../views/LineChart.js"></script>
 <template>
   <div class="hello">
     <b-form>

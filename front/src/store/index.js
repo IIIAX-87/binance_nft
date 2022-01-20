@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Axios from 'axios';
+import moment from "moment";
 
 Vue.use(Vuex)
 
@@ -15,7 +16,85 @@ export default new Vuex.Store({
         data: [],
         backgroundColor: 'rgb(255, 99, 132)'
         }],
+    },
+    series: {
+      data: [{
+        name: 'null',
+        data: []
+      }],
+      options: {
+            tooltip: {
+            custom: function({seriesZ, seriesIndex, dataPointIndex, w}) {
+              console.log(w.globals.seriesZ)
+              return '<div class="arrow_box">' +
+                      '<span><h5>' + w.globals.seriesZ[seriesIndex][dataPointIndex]['buyer']['buyer_name'] + ' </h5>' + moment(w.globals.seriesZ[seriesIndex][dataPointIndex]['order_success_time']).format("DD.MM.YYYY hh:mm:ss") +'</span></br>' +
+                      '<span>' + w.globals.seriesZ[seriesIndex][dataPointIndex]['price']+ ' ' + w.globals.seriesZ[seriesIndex][dataPointIndex]['currency']['name'] + '</span>' +
+                      '</div>'
+            }
 },
+            chart: {
+              height: 100,
+              type: 'scatter',
+              zoom: {
+                type: 'xy'
+              },
+              animations: {
+                enabled: false
+              },
+            },
+            dataLabels: {
+              enabled: false
+
+            },
+            grid: {
+              xaxis: {
+                lines: {
+                  show: true
+                }
+              },
+              yaxis: {
+
+                lines: {
+                  show: true
+                }
+              },
+            },
+            xaxis: {
+              type: 'datetime',
+              labels: {
+          show: true,
+          rotate: -45,
+          rotateAlways: false,
+          hideOverlappingLabels: true,
+          showDuplicates: false,
+          trim: false,
+          minHeight: undefined,
+          maxHeight: 120,
+          style: {
+              colors: [],
+              fontSize: '12px',
+              fontFamily: 'Helvetica, Arial, sans-serif',
+              fontWeight: 400,
+              cssClass: 'apexcharts-xaxis-label',
+          },
+          offsetX: 0,
+          offsetY: 0,
+          format: undefined,
+          formatter: undefined,
+          datetimeUTC: true,
+          datetimeFormatter: {
+              year: 'yyyy',
+              month: "MMM 'yy",
+              day: 'dd MMM',
+              hour: 'HH:mm:ss',
+          },
+      },
+
+            },
+            yaxis: {
+            }
+          },
+    }
   },
   getters: {
     NFT_TYPES: state => {
@@ -25,7 +104,7 @@ export default new Vuex.Store({
       return state.top_transactions;
     },
     TRANSACTIONS: state => {
-      return state.transactions;
+      return state.series;
     },
   },
   mutations: {
@@ -36,11 +115,14 @@ export default new Vuex.Store({
       state.top_transactions = payload;
     },
     SET_TRANSACTIONS: (state, payload) => {
-      var arrayLength = payload.length
-      for (var i = 0; i < arrayLength; i++) {
-        state.transactions.datasets[0].data.push({x: payload[i].order_success_time, y: Number(payload[i].price)})
+      state.series.data[0]['data'] = []
+      state.series.data[0]['name'] = payload[0]['product']['product_title']
+      let arrayLength = payload.length
+      for (let i = 0; i < arrayLength; i++) {
+        state.series.data[0]['data'].push([payload[i]['order_success_time'],parseInt(payload[i]['price'], 10), payload[i]])
 
-      } state.transactions.alldata.push(payload);
+      }
+
     },
   },
   actions: {
@@ -55,8 +137,15 @@ export default new Vuex.Store({
     GET_TRANSACTIONS: async (context, payload) => {
       let {data} = await Axios.get('http://ec2-52-50-121-50.eu-west-1.compute.amazonaws.com:8000/api/transaction/?product=' + payload + '&format=json&json');
       context.commit('SET_TRANSACTIONS', data);
+
     },
   },
   modules: {
+  },
+  methods:{
+      fillData (label) {
+    return moment(label).format("DD.MM.YYYY hh:mm:ss");
   }
+  },
+
 })
