@@ -127,15 +127,15 @@ export default new Vuex.Store({
   },
   actions: {
     GET_NFT_TYPES: async (context, payload) => {
-      let {data} = await Axios.get('http://ec2-52-50-121-50.eu-west-1.compute.amazonaws.com:8000/api/nft_type/?format=json&json');
+      let {data} = await Axios.get('http://rdp.tekhnodom.ru:8000/api/nft_type/?format=json&json');
       context.commit('SET_NFT_TYPES', data);
     },
     GET_TOP_TRANSACTIONS: async (context, payload) => {
-      let {data} = await Axios.get('http://ec2-52-50-121-50.eu-west-1.compute.amazonaws.com:8000/api/transaction_top/?nft_type=' + payload.nft_type + '&top=' + payload.top + '&format=json&json');
+      let {data} = await Axios.get('http://rdp.tekhnodom.ru:8000/api/transaction_top/?nft_type=' + payload.nft_type + '&top=' + payload.top + '&format=json&json');
       context.commit('SET_TOP_TRANSACTIONS', data);
     },
     GET_TRANSACTIONS: async (context, payload) => {
-      let {data} = await Axios.get('http://ec2-52-50-121-50.eu-west-1.compute.amazonaws.com:8000/api/transaction/?product=' + payload + '&format=json&json');
+      let {data} = await Axios.get('http://rdp.tekhnodom.ru:8000/api/transaction/?product=' + payload + '&format=json&json');
       context.commit('SET_TRANSACTIONS', data);
 
     },
