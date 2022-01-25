@@ -1,6 +1,8 @@
 import json
 
+from django.http import JsonResponse
 from django.shortcuts import render
+from django.views import View
 from rest_framework import generics
 import django_filters.rest_framework
 from bot.models import Product, TradeType, NftType, Currency, Transaction, Buyer
@@ -69,3 +71,14 @@ class TopBuyers(APIView):
             buyers.append({'id': buyer.id, 'buyer': buyer.buyer_name, 'count': len(Transaction.objects.filter(buyer=buyer))})
         queryset = sorted(buyers, key=lambda k: k['count'], reverse=True)
         return Response(queryset[:int(request.query_params['top'])])
+
+
+class MyView(View):
+    def get(self, request):
+        data = {
+            "name": "Vaibhav",
+            "age": 20,
+            "hobbies": ["Coding", "Art", "Gaming", "Cricket", "Piano"]
+        }
+
+        return JsonResponse(data)

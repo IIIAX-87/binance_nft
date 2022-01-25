@@ -10,4 +10,5 @@ urlpatterns = [
     path('trade_type/', views.TradeTypeView.as_view()),
     path('nft_type/', views.NftTypeView.as_view()),
     path('currency/', views.CurrencyView.as_view()),
+    path('test/', views.MyView.as_view()),
 ]

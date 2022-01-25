@@ -84,7 +84,6 @@ class Command(BaseCommand):
             try:
                 get_transactions(results=results)
                 for result in results:
-                    print(result['data']['orderSuccessAnnounces'][0])
                     get_transaction(result['data']['orderSuccessAnnounces'][0])
             except Exception as err:
                 print(err)
