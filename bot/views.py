@@ -1,4 +1,5 @@
 import json
+import time
 
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -75,7 +76,7 @@ class TopBuyers(APIView):
 
 class MyView(View):
     def get(self, request):
-        print(request)
         product = request.GET.get("product")
         transactions = Transaction.objects.filter(product_id=product)
+        print(time.time(), len(transactions))
         return JsonResponse({'ingredients': list(transactions)})
