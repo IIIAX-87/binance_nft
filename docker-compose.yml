@@ -3,8 +3,8 @@ version: '3'
 services:
   binance_nft:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
-#    command: gunicorn binance_nft.wsgi:application --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE=binance_nft.settings
+#    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn binance_nft.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - ./static:/usr/src/static
       - ./media:/usr/src/media
@@ -70,7 +70,7 @@ services:
   site:
     build: ./front/
     ports:
-    - 1488:1488
+    - "1488:1488"
     restart: unless-stopped
     volumes:
       #- ./svertuhi/dist:/var/www/html
