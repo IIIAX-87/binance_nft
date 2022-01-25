@@ -29,7 +29,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:8000',
     'http://127.0.0.1:1488',
     'http://localhost:1488',
-    'http://52.50.121.50:1488'
+    'http://52.50.121.50:1488',
     'http://rdp.tekhnodom.ru:1488'
 )
 
