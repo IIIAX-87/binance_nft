@@ -75,10 +75,5 @@ class TopBuyers(APIView):
 
 class MyView(View):
     def get(self, request):
-        data = {
-            "name": "Vaibhav",
-            "age": 20,
-            "hobbies": ["Coding", "Art", "Gaming", "Cricket", "Piano"]
-        }
-
-        return JsonResponse(data)
+        transactions = Transaction.objects.filter(product_id=request.query_params['product'])
+        return JsonResponse({'ingredients': list(transactions)})
