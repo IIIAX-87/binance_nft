@@ -3,7 +3,8 @@ version: '3'
 services:
   binance_nft:
     build: .
-    command: gunicorn binance_nft.wsgi:application --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE=binance_nft.settings
+    command: python manage.py runserver 0.0.0.0:8000
+#    command: gunicorn binance_nft.wsgi:application --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE=binance_nft.settings
     volumes:
       - ./static:/usr/src/static
       - ./media:/usr/src/media
